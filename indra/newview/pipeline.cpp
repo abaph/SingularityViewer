@@ -7994,7 +7994,8 @@ void LLPipeline::renderDeferredLighting()
 			mDeferredLight.flush();
 		}
 
-		if (RenderDeferredSSAO)
+		static const LLCachedControl<bool> SHAlwaysSoftenShadows("SHAlwaysSoftenShadows",true);
+		if (RenderDeferredSSAO || (RenderShadowDetail > 0 && SHAlwaysSoftenShadows))
 		{ //soften direct lighting lightmap
 			LLFastTimer ftm(FTM_SOFTEN_SHADOW);
 			//blur lightmap
@@ -9715,7 +9716,7 @@ void LLPipeline::renderShadow(glh::matrix4f& view, glh::matrix4f& proj, LLCamera
 		renderMaskedObjects(LLRenderPass::PASS_ALPHA_MASK, mask, TRUE, TRUE);
 		renderMaskedObjects(LLRenderPass::PASS_FULLBRIGHT_ALPHA_MASK, mask, TRUE, TRUE);
 		gDeferredShadowAlphaMaskProgram.setMinimumAlpha(0.598f);
-		//renderObjects(LLRenderPass::PASS_ALPHA, mask, TRUE, TRUE);
+		renderObjects(LLRenderPass::PASS_ALPHA, mask, TRUE, TRUE);
 
 		mask = mask & ~LLVertexBuffer::MAP_TEXTURE_INDEX;
 
