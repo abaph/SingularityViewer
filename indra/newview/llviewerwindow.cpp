@@ -60,6 +60,7 @@
 #include "llaudioengine.h"		// mute on minimize
 #include "llassetstorage.h"
 #include "llfontgl.h"
+#include "llfontfreetype.h"
 #include "llmousehandler.h"
 #include "llrect.h"
 #include "llsky.h"
@@ -4231,7 +4232,7 @@ BOOL LLViewerWindow::mousePointOnLandGlobal(const S32 x, const S32 y, LLVector3d
 	LLVector3		probe_point_region;
 
 	// walk forwards to find the point
-	for (mouse_dir_scale = FIRST_PASS_STEP; mouse_dir_scale < gAgentCamera.mDrawDistance; mouse_dir_scale += FIRST_PASS_STEP)
+	for (mouse_dir_scale = FIRST_PASS_STEP; mouse_dir_scale < gAgentCamera.mDrawDistance * 4; mouse_dir_scale += FIRST_PASS_STEP)
 	{
 		LLVector3d mouse_direction_global_d;
 		mouse_direction_global_d.setVec(mouse_direction_global * mouse_dir_scale);
