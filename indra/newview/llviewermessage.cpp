@@ -4018,7 +4018,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 		std::string prefix = mesg.substr(0, 4);
 		if (prefix == "/me " || prefix == "/me'")
 		{
-			chat.mText = from_name;
+			chat.mText = chat.mFromName;
 			mesg = mesg.substr(3);
 			ircstyle = TRUE;
 			// This block was moved up to allow bubbles with italicized chat
@@ -4191,7 +4191,7 @@ void process_chat_from_simulator(LLMessageSystem *msg, void **user_data)
 				break;
 			}
 
-			chat.mText = from_name + verb + mesg;
+			chat.mText = chat.mFromName + verb + mesg;
 		}
 
 		if (chatter)
@@ -5287,10 +5287,19 @@ void process_sound_trigger(LLMessageSystem *msg, void **)
 	}
 
 	// Don't play sounds from gestures if they are not enabled.
-	if (object_id == owner_id && !gSavedSettings.getBOOL("EnableGestureSounds"))
+	if (object_id == owner_id)
 	{
-		// Don't mute own gestures, if they're not muted.
-		if (owner_id != gAgentID || !gSavedSettings.getBOOL("EnableGestureSoundsSelf"))
+		if (!gSavedSettings.getBOOL("EnableGestureSounds"))
+		{
+			// Don't mute own gestures, if they're not muted.
+			if (owner_id != gAgentID || !gSavedSettings.getBOOL("EnableGestureSoundsSelf"))
+				return;
+		}
+	}
+	else if (!gSavedSettings.getBOOL("EnableNongestureSounds"))
+	{
+		// Don't mute own non-gestures, if they're not muted.
+		if (owner_id != gAgentID || !gSavedSettings.getBOOL("EnableNongestureSoundsSelf"))
 			return;
 	}
 

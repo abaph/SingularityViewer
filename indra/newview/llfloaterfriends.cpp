@@ -37,7 +37,7 @@
 
 #include "llfloaterfriends.h"
 
-
+#include "llsdutil_math.h"
 #include "llagent.h"
 #include "llavataractions.h"
 #include "llavatarnamecache.h"
@@ -418,6 +418,7 @@ BOOL LLPanelFriends::addFriend(const LLUUID& agent_id)
 
 	std::string fullname;
 	BOOL have_name = LLAvatarNameCache::getPNSName(agent_id, fullname);
+	if (!have_name) gCacheName->getFullName(agent_id, fullname);
 
 	LLSD element;
 	element["id"] = agent_id;
@@ -426,6 +427,11 @@ BOOL LLPanelFriends::addFriend(const LLUUID& agent_id)
 	friend_column["value"] = fullname;
 	friend_column["font"] = "SANSSERIF";
 	friend_column["font-style"] = "NORMAL";	
+	/* Singu TODO: Liru will fix this up to actually work later
+	static const LLCachedControl<LLColor4> sDefaultColor(gColors, "DefaultListText");
+	static const LLCachedControl<LLColor4> sMutedColor("AscentMutedColor");
+	friend_column["color"] = LLAvatarActions::isBlocked(agent_id) ? sMutedColor : sDefaultColor;
+	*/
 
 	LLSD& online_status_column = element["columns"][LIST_ONLINE_STATUS];
 	online_status_column["column"] = "icon_online_status";
@@ -500,6 +506,7 @@ BOOL LLPanelFriends::updateFriendItem(const LLUUID& agent_id, const LLRelationsh
 
 	std::string fullname;
 	BOOL have_name = LLAvatarNameCache::getPNSName(agent_id, fullname);
+	if (!have_name) gCacheName->getFullName(agent_id, fullname);
 
 	// Name of the status icon to use
 	std::string statusIcon;

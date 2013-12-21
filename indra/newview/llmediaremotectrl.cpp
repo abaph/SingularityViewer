@@ -279,6 +279,9 @@ void LLMediaRemoteCtrl::enableMediaButtons()
 					LLChat chat;
 					chat.mText = getString("Now_playing") + " " + info_text;
 					chat.mSourceType = CHAT_SOURCE_SYSTEM;
+					// Lie to RLVa so it won't filter this
+					chat.mRlvLocFiltered = true;
+					chat.mRlvNamesFiltered = true;
 					LLFloaterChat::addChat(chat);
 				}
 			}
@@ -290,7 +293,7 @@ void LLMediaRemoteCtrl::enableMediaButtons()
 	mMusicIcon->setColor(music_icon_color);
 	if(!media_icon_name.empty())
 	{
-		media_icon->setImage(media_icon_name);
+		media_icon->setValue(media_icon_name);
 	}
 
 	media_play_btn->setEnabled(play_media_enabled);
