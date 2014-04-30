@@ -554,12 +554,7 @@ void LLFloaterIMPanel::onClickMuteVoice()
 // virtual
 void LLFloaterIMPanel::draw()
 {	
-	LLViewerRegion* region = gAgent.getRegion();
-	
-	bool enable_connect = (region && !region->getCapability("ChatSessionRequest").empty())
-					  && mSessionInitialized
-					  && LLVoiceClient::getInstance()->voiceEnabled()
-					  && mCallBackEnabled;
+	bool enable_connect = mSessionInitialized && LLVoiceClient::getInstance()->voiceEnabled() && mCallBackEnabled;
 
 	// hide/show start call and end call buttons
 	mEndCallBtn->setVisible(LLVoiceClient::getInstance()->voiceEnabled() && mVoiceChannel->getState() >= LLVoiceChannel::STATE_CALL_STARTED);
@@ -1002,10 +997,10 @@ void LLFloaterIMPanel::onFlyoutCommit(LLComboBox* flyout, const LLSD& value)
 
 void show_log_browser(const std::string& name, const std::string& id)
 {
-#if LL_WINDOWS // Singu TODO: Other platforms?
+#if LL_WINDOWS || LL_DARWIN // Singu TODO: Linux?
 	if (gSavedSettings.getBOOL("LiruLegacyLogLaunch"))
 	{
-		gViewerWindow->getWindow()->ShellEx("\"" + LLLogChat::makeLogFileName(name) + "\"");
+		gViewerWindow->getWindow()->ShellEx(LLLogChat::makeLogFileName(name));
 		return;
 	}
 #endif
